@@ -1,0 +1,11 @@
+coldbox/
+testbox/
+wirebox/
+*.sublime-project
+*.sublime-workspace
+docs/
+docbox/
+WEB-INF/
+cached/
+cfconcurrent/
+thumbs.db

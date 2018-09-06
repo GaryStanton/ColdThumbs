@@ -1,0 +1,6 @@
+{
+    "app":{
+        "cfengine":"http://update.lucee.org/rest/update/provider/forgebox/5.2.9.24-SNAPSHOT"
+    },
+    "name":"ColdThumbs-Lucee-5.9"
+}
