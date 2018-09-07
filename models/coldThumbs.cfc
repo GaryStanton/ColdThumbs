@@ -313,7 +313,7 @@ component singleton accessors="true"{
 		Arguments.extension = (Len(Arguments.extension) ? Arguments.extension : Arguments.fileInfo.extension);
 		Arguments.extension = ArrayFindNoCase(getAllowedExtensions(), Arguments.extension) ? Arguments.extension : 'jpg';
 		Local.hash = Hash(Arguments.fileInfo.filename & Arguments.width & Arguments.height & Arguments.interpolation & Arguments.fileInfo.lastModified & Arguments.fixCanvas & '.' & Arguments.fileInfo.extension);
-		return (getKeepFilenames() ? Arguments.fileInfo.filename & '_' & left(Local.hash, 6) : Local.hash) & '.' & Arguments.extension;
+		return (getKeepFilenames() ? Replace(REReplace(Arguments.fileInfo.filename, "[^0-9a-zA-Z -]", "", "ALL"), ' ', '-', 'ALL') & '_' & left(Local.hash, 6) : Local.hash) & '.' & Arguments.extension;
 	}
 
 
