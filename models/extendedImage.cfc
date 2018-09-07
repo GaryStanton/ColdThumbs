@@ -292,7 +292,7 @@ component accessors="true"{
 			// Create temporary filename
 			Local.tempFilename = GetTempDirectory() & createUUID() & '.' & listLast(getSrc(), '.');
 			// Resize the image in ImageMagick
-			cfexecute( name='"#getImageMagickLocation()#"', arguments="#getSrc()# -resize #Arguments.width GT 0 ? Arguments.width : ''##Arguments.height GT 0 ? 'x' & Arguments.height : ''# #Local.tempFilename#", variable="Results", errorVariable="Error", timeout="120");
+			cfexecute( name='"#getImageMagickLocation()#"', arguments="""#getSrc()#"" -resize #Arguments.width GT 0 ? Arguments.width : ''##Arguments.height GT 0 ? 'x' & Arguments.height : ''# ""#Local.tempFilename#""", variable="Results", errorVariable="Error", timeout="120");
 			// Read the temporary image into the object
 			readImage(src = Local.tempFilename);
 			// Delete temporary image
