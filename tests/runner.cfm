@@ -19,4 +19,4 @@ Twitter: @SimianE
 <cfparam name="url.propertiesSummary" 	default="false" type="boolean">
 
 <!--- Include the TestBox HTML Runner --->
-<cfinclude template="/testbox/system/runners/HTMLRunner.cfm" >
+<cfinclude template="../testbox/system/runners/HTMLRunner.cfm" >

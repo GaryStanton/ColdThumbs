@@ -12,13 +12,13 @@ Twitter: @SimianE
 	// create with default strategy
 	docbox = new docbox.DocBox( properties = { 
 		projectTitle = "ColdThumbs documentation", 
-		outputDir    = "#expandPath( '/docs' )#"
+		outputDir    = "#expandPath( 'docs/' )#"
 	});
 
 	docbox.generate(
-	    source  = "#expandPath( '/models' )#",
+	    source  = "#expandPath( 'models/' )#",
 	    mapping = "models"
 	);
 
-	location(url='/docs/index.html', addtoken=false);
+	location(url='docs/', addtoken=false);
 </cfscript>

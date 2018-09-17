@@ -9,9 +9,8 @@
 
 component{
 	this.name 					= hash( getCurrentTemplatePath() );
-	this.mappings[ '/docbox' ]  = getDirectoryFromPath( getCurrentTemplatePath() ) & 'docbox';
-	this.mappings[ '/VFS' ]  	= "ram://";
-
+	this.mappings[ '/docbox' ]  = getDirectoryFromPath( getCurrentTemplatePath() ) & 'docbox/';
+	this.mappings[ '/models' ]  = getDirectoryFromPath( getCurrentTemplatePath() ) & 'models/';
 
 	public boolean function onApplicationStart(){
 		Application.executorService = createObject("component", "cfconcurrent.ExecutorService")
@@ -69,5 +68,9 @@ component{
 		if (StructKeyExists(Application, 'executorService')) {
 			Application.executorService.stop();
 		}
+	}
+
+	function onError(e) {
+		writeDump(e);
 	}
 }

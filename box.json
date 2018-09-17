@@ -33,10 +33,10 @@
         "docbox":"^2.2.1+27"
     },
     "installPaths":{
-        "testbox":"testbox/",
-        "wirebox":"wirebox/",
-        "coldbox":"coldbox/",
-        "docbox":"docbox/",
+        "testbox":"testbox",
+        "wirebox":"wirebox",
+        "coldbox":"coldbox",
+        "docbox":"docbox",
         "cfconcurrent":"cfconcurrent/"
     },
     "scripts":{},

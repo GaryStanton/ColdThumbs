@@ -51,7 +51,7 @@ Twitter: @SimianE
 					var thisSrc 		= $(this).attr('data-src');
 					var imageSuccess 	= function(){$(thisImage).attr('src', thisSrc);}
 					var imageFail 		= function(){
-						$(thisImage).attr('src', '/demo/Placeholder.png');
+						$(thisImage).attr('src', 'demo/Placeholder.png');
 						setTimeout(function(){
 							checkImage(thisSrc, imageSuccess, imageFail);
 						}, 1000);
@@ -77,7 +77,6 @@ Twitter: @SimianE
 
 			<div class="container">
 
-
 				<nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark">
 					<a class="navbar-brand" href="##">ColdThumbs</a>
 					<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="##mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -86,13 +85,13 @@ Twitter: @SimianE
 					<div class="collapse navbar-collapse" id="mainNav">
 						<ul class="navbar-nav mr-auto">
 							<li class="nav-item active">
-								<a class="nav-link" href="/">Home</a>
+								<a class="nav-link" href="">Home</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link" href="#fileExists(getDirectoryFromPath( getCurrentTemplatePath() ) & 'docs/index.html') ? '/docs/index.html' : '/generateDocs.cfm'#">API Docs</a>
+								<a class="nav-link" href="#fileExists(getDirectoryFromPath( getCurrentTemplatePath() ) & 'docs/index.html') ? 'docs/' : 'generateDocs.cfm'#">API Docs</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link" href="/tests/runner.cfm">Tests</a>
+								<a class="nav-link" href="tests/runner.cfm">Tests</a>
 							</li>
 						</ul>
 					</div>
@@ -124,7 +123,7 @@ Twitter: @SimianE
 					</div>
 
 					<div class="threads col-md-5 offset-md-1">
-						<a href="/actClearCache.cfm" class="float-right btn btn-info">Clear cached files</a>
+						<a href="actClearCache.cfm" class="float-right btn btn-info">Clear cached files</a>
 
 						<div>
 						<h3>ColdThumbs settings</h3>
