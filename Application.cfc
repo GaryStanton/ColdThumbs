@@ -13,15 +13,20 @@ component{
 	this.mappings[ '/models' ]  = getDirectoryFromPath( getCurrentTemplatePath() ) & 'models/';
 
 	public boolean function onApplicationStart(){
-		Application.executorService = createObject("component", "cfconcurrent.ExecutorService")
-			.init( serviceName = "executorServiceExample", maxConcurrent = 2, maxWorkQueueSize = 100000);
-		Application.executorService.setLoggingEnabled( true );
-		Application.executorService.start();
-
+		// Instantiate ColdThumbs
 		Application.com.coldThumbs = new models.coldThumbs()
 			.setMaxThreads(2)
-			.setExecutorService(Application.executorService)
 			.setImageMagickLocation("C:\Program Files\ImageMagick-7.0.8-Q16\magick.exe");
+
+		// CFConcurrent for threading
+		if (fileExists(getDirectoryFromPath(getCurrentTemplatePath()) & 'cfconcurrent/ExecutorService.cfc')) {
+			Application.executorService = createObject("component", "cfconcurrent.ExecutorService")
+				.init( serviceName = "executorServiceExample", maxConcurrent = 2, maxWorkQueueSize = 100000);
+			Application.executorService.setLoggingEnabled( true );
+			Application.executorService.start();
+			Application.com.coldThumbs.setExecutorService(Application.executorService)
+		}
+
 		return true;
 	}
 
