@@ -53,7 +53,7 @@ component extends="tests.BaseTest" appMapping="/tests" {
 
 			it( "Can generate a cached filename", function(){
 				var fileInfo = coldThumbs.getImageFileInfo(src = expandPath('.') & '/resources/testImage.jpg');
-				expect(coldThumbs.generateCachedFilename(fileInfo, 600, 600)).toBe('01445AF6417DF326DFFA460A5CD0230E.jpg');
+				expect(coldThumbs.generateCachedFilename(fileInfo, 600, 600)).toBe('B3648CBBA8132A741BC680520873625C.jpg');
 			});
 		});
 
