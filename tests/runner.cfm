@@ -19,4 +19,8 @@ Twitter: @SimianE
 <cfparam name="url.propertiesSummary" 	default="false" type="boolean">
 
 <!--- Include the TestBox HTML Runner --->
-<cfinclude template="../testbox/system/runners/HTMLRunner.cfm" >
+<cfif (fileExists(getDirectoryFromPath(getCurrentTemplatePath()) & '../testbox/system/runners/HTMLRunner.cfm'))>
+	<cfinclude template="../testbox/system/runners/HTMLRunner.cfm" >
+<cfelse>
+	<h2>Testbox is not installed</h2><p>Have you run `install` from CommandBox?</p>
+</cfif>
