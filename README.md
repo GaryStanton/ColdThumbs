@@ -76,10 +76,10 @@ See the [full API documentation](http://www.simianenterprises.co.uk/ColdThumbs/d
 
 ### Threading
 ColdThumbs is able to spawn new threads to resize images, returning the URL of the cached image before it is actually resized, so that you may avoid blocking of browser rendering. 
-Out of the box ColdThumbs will use the internal threading functionality provided by `CFThread` and will queue threads to avoid overloading your server. You may set the maximum number of resizing threads by updating the *maxThreads* property, e.g. `coldThumbs.setMaxThreads(3)`.
+Out of the box ColdThumbs will use the internal threading functionality provided by `CFThread` and will queue threads to avoid overloading your server. You may set the maximum number of resizing threads by updating the `maxThreads` property, e.g. `coldThumbs.setMaxThreads(3);`.
 
 #### CFConcurrent
-If present in your application you may also make use of [CFConcurrent](https://github.com/pixl8/cfconcurrent) by simply providing an instance of the CFConcurrent executor service to ColdThumbs, e.g. `coldThumbs.setExecutorService(executorService)`
+If present in your application you may also make use of [CFConcurrent](https://github.com/pixl8/cfconcurrent) by simply providing an instance of the CFConcurrent executor service to ColdThumbs, e.g. `coldThumbs.setExecutorService(executorService);`
 
 
 ### ImageMagick
