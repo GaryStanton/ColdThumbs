@@ -46,4 +46,8 @@ The main function of ColdThumbs is `getThumbnail()`. You may pass parameters to 
 ColdThumbs will resize the image and store a copy of it in a local cache folder. Cached filenames are hashed with image properties, ensuring that if the source file changes a new version will be cached automatically.
 The resulting instance of `extendedImage` contains the location of the cached image.
 
+### Demo
+Get up and running with a local demo, by running `box install` in the ColdThumbs folder. The demo includes some example code, a test suite and API documentation.
+You can also find a live demo hosted at: http://www.simianenterprises.co.uk/ColdThumbs
+
 
