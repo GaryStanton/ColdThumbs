@@ -76,7 +76,7 @@ component singleton accessors="true"{
 	* An instance of CFConcurrent.ExecutorService - https://github.com/pixl8/cfconcurrent
 	* When available, ColdThumbs will use the CFConcurrent framework to handle threading over native CFThread
 	*/
-	property type="cfconcurrent.ExecutorService" name="ExecutorService";
+	property type="cfconcurrent.ExecutorService" name="ExecutorService" default="";
 
 	/**
 	* Constructor
