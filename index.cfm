@@ -34,6 +34,21 @@ Twitter: @SimianE
 				overflow: hidden;
 				height: 800px;
 			}
+
+			.nav-item {
+				margin-right: 10px;
+			}
+
+			.nav-item svg {
+				margin-right: 5px;
+			}
+
+			a.navbar-brand {
+				margin-right: 15px;
+				margin-left: 10px;
+				padding-right: 25px;
+				border-right: 1px dotted rgba(255, 255, 255, 0.5);
+			}
 		</style>
 	    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 
@@ -78,20 +93,20 @@ Twitter: @SimianE
 			<div class="container">
 
 				<nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark">
-					<a class="navbar-brand" href="##">ColdThumbs</a>
+					<a class="navbar-brand" href="">ColdThumbs</a>
 					<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="##mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
 						<span class="navbar-toggler-icon"></span>
 					</button>
 					<div class="collapse navbar-collapse" id="mainNav">
 						<ul class="navbar-nav mr-auto">
-							<li class="nav-item active">
-								<a class="nav-link" href="">Home</a>
+							<li class="nav-item">
+								<a class="nav-link" href="#fileExists(getDirectoryFromPath( getCurrentTemplatePath() ) & 'docs/index.html') ? 'docs/' : 'generateDocs.cfm'#"><i class="fas fa-file-alt"></i> API Docs</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link" href="#fileExists(getDirectoryFromPath( getCurrentTemplatePath() ) & 'docs/index.html') ? 'docs/' : 'generateDocs.cfm'#">API Docs</a>
+								<a class="nav-link" href="tests/runner.cfm"><i class="fas fa-check"></i> Tests</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link" href="tests/runner.cfm">Tests</a>
+								<a class="nav-link" href="https://github.com/GaryStanton/ColdThumbs"><i class="fas fa-code"></i> Source</a>
 							</li>
 						</ul>
 					</div>
@@ -166,6 +181,8 @@ Twitter: @SimianE
 
 	    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
 	    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+	    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/solid.js" integrity="sha384-GJiigN/ef2B3HMj0haY+eMmG4EIIrhWgGJ2Rv0IaWnNdWdbWPr1sRLkGz7xfjOFw" crossorigin="anonymous"></script>
+		<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/fontawesome.js" integrity="sha384-2OfHGv4zQZxcNK+oL8TR9pA+ADXtUODqGpIRy1zOgioC4X3+2vbOAp5Qv7uHM4Z8" crossorigin="anonymous"></script>
 	    <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
 
 	</cfoutput>
