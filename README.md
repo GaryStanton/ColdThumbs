@@ -29,25 +29,23 @@ The full CommandBox installation includes a suite of TestBox tests, DocBox docum
 You may also manually download ColdThumbs from GitHub. The only files requried are in the model folder.
 
 ### ImageMagick
-ColdThumbs is able to use the internal CFML resizing functionality, but for best results I recommend making use of [https://www.imagemagick.org/](ImageMagick).
+ColdThumbs is able to use the internal CFML resizing functionality, but for best results I recommend making use of [ImageMagick](https://www.imagemagick.org/).  
 Simply update the `ImageMagickLocation` property of the ColdThumbs CFC with the location of your `Magick.exe`
 
 ## Usage
 ColdThumbs may be used as a ColdBox module, or standalone in any CFML application. 
 
 ### Instantiation
-The `coldThumbs.cfc` component is designed to be instantiated as a singleton.
+The `coldThumbs.cfc` component is designed to be instantiated as a singleton.  
 `coldThumbs = new coldThumbs.model.coldThumbs();`
 
 When processing an image, ColdThumbs will create and return instances of the `extendedImage` object.
 
 ### Resizing
-The main function of ColdThumbs is `getThumbnail()`. You may pass parameters to this function to indiciate the source of the image you'd like to process as well as desired dimensions.
-ColdThumbs will resize the image and store a copy of it in a local cache folder. Cached filenames are hashed with image properties, ensuring that if the source file changes a new version will be cached automatically.
+The main function of ColdThumbs is `getThumbnail()`. You may pass parameters to this function to indiciate the source of the image you'd like to process as well as desired dimensions.  
+ColdThumbs will resize the image and store a copy of it in a local cache folder. Cached filenames are hashed with image properties, ensuring that if the source file changes a new version will be cached automatically.  
 The resulting instance of `extendedImage` contains the location of the cached image.
 
 ### Demo
-Get up and running with a local demo, by running `box install` in the ColdThumbs folder. The demo includes some example code, a test suite and API documentation.
+Get up and running with a local demo, by running `box install` in the ColdThumbs folder. The demo includes some example code, a test suite and API documentation.  
 You can also find a live demo hosted at: http://www.simianenterprises.co.uk/ColdThumbs
-
-
