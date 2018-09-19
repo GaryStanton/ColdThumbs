@@ -26,7 +26,9 @@ ColdThumbs requires ColdFusion 11+ or Lucee 5+
 
 ## Installation
 The recommended method of installation is via CommandBox. Simply navigate to your project and run:
-`install coldthumbs`
+```bash
+install coldthumbs
+```
 The full CommandBox installation includes a suite of TestBox tests, DocBox documentation and some examples.
 You may also manually download ColdThumbs from GitHub. The only files requried are in the model folder.
 
@@ -37,7 +39,13 @@ ColdThumbs may be used as a ColdBox module, or standalone in any CFML applicatio
 
 ### Instantiation
 The `coldThumbs.cfc` component is designed to be instantiated as a singleton.  
-`coldThumbs = new coldThumbs.model.coldThumbs();`
+```cfc
+var ColdThumbs  = new coldThumbs.model.coldThumbs();
+```
+or with ColdBox:
+```cfc
+var ColdThumbs  = getInstance("ColdThumbs@ColdThumbs");
+```
 
 
 When processing an image, ColdThumbs will create and return instances of the `extendedImage` object.
@@ -46,8 +54,8 @@ When processing an image, ColdThumbs will create and return instances of the `ex
 The main function of ColdThumbs is `getThumbnail()`. You may pass parameters to this function to indiciate the source of the image you'd like to process as well as desired dimensions.  
 ColdThumbs will resize the image and store a copy of it in a local cache folder. Cached filenames are hashed with image properties, ensuring that if the source file changes a new version will be cached automatically.  
 
-```java
-cachedImage = coldThumbs.getThumbnail(
+```cfc
+cachedImage = ColdThumbs.getThumbnail(
     	src                  = 'your-large-image.jpg' // (required) The location (path or URL) of the image
     ,	authenticationString = 'user:pass'            // An authentication string if one is required (user:pass)
     ,	width                = 400                    // Width of cached file
@@ -87,7 +95,9 @@ ColdThumbs will happily make use of the internal CFML resizing functionality, ho
 For best results I recommend making use of [ImageMagick](https://www.imagemagick.org/).  
 
 Simply update the `ImageMagickLocation` property of the ColdThumbs CFC with the location of your `Magick.exe` binary:
-`coldThumbs.setImageMagickLocation("C:\Program Files\ImageMagick-7.0.8-Q16\magick.exe");`   
+```cfc
+ColdThumbs.setImageMagickLocation("C:\Program Files\ImageMagick-7.0.8-Q16\magick.exe");
+```
   
 
 ---
