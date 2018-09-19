@@ -14,6 +14,11 @@
     "shortDescription":"ColdThumbs is a ColdFusion component to dynamically resize and cache images.",
     "type":"",
     "keywords":"Image Thumbnail Cache Resize",
+    "scripts":{
+        "postVersion":"package set location='GaryStanton/ColdThumbs#v`package version`'",
+        "onRelease":"publish",
+        "postPublish":"!git push --follow-tags"
+    },
     "devDependencies":{
         "wirebox":"^5.0.0+633",
         "testbox":"^2.7.0+167",
