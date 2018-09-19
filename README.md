@@ -40,7 +40,7 @@ ColdThumbs may be used as a ColdBox module, or standalone in any CFML applicatio
 ### Instantiation
 The `coldThumbs.cfc` component is designed to be instantiated as a singleton.  
 ```cfc
-var ColdThumbs  = new coldThumbs.model.coldThumbs();
+var ColdThumbs  = new coldThumbs.models.coldThumbs();
 ```
 or with ColdBox:
 ```cfc
