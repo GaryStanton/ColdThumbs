@@ -12,7 +12,7 @@
     "bugs":"https://github.com/GaryStanton/ColdThumbs/issues",
     "slug":"ColdThumbs",
     "shortDescription":"ColdThumbs is a ColdFusion component to dynamically resize and cache images.",
-    "type":"",
+    "type":"modules",
     "keywords":"Image Thumbnail Cache Resize",
     "scripts":{
         "postVersion":"package set location='GaryStanton/ColdThumbs#v`package version`'",
