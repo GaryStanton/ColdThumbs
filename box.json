@@ -1,31 +1,19 @@
 {
-    "name":"coldthumbs",
+    "name":"ColdThumbs",
     "version":"2.0.3",
     "author":"Gary Stanton",
     "location":"",
-    "homepage":"https://garystanton.co.uk",
-    "documentation":"",
+    "homepage":"http://www.simianenterprises.co.uk/coldthumbs/",
+    "documentation":"http://www.simianenterprises.co.uk/coldthumbs/docs/",
     "repository":{
-        "type":"",
-        "URL":""
+        "type":"git",
+        "URL":"https://github.com/GaryStanton/ColdThumbs"
     },
-    "bugs":"",
-    "slug":"coldthumbs",
+    "bugs":"https://github.com/GaryStanton/ColdThumbs/issues",
+    "slug":"ColdThumbs",
     "shortDescription":"ColdThumbs is a ColdFusion component to dynamically resize and cache images.",
-    "description":"",
-    "instructions":"",
-    "changelog":"",
     "type":"",
     "keywords":"Image Thumbnail Cache Resize",
-    "private":false,
-    "projectURL":"",
-    "license":[
-        {
-            "type":"",
-            "URL":""
-        }
-    ],
-    "contributors":[],
     "devDependencies":{
         "wirebox":"^5.0.0+633",
         "testbox":"^2.7.0+167",
@@ -37,27 +25,7 @@
         "wirebox":"wirebox",
         "coldbox":"coldbox",
         "docbox":"docbox",
-        "cfconcurrent":"cfconcurrent/"
-    },
-    "scripts":{},
-    "ignore":[],
-    "testbox":{
-        "runner":[
-            {
-                "default":""
-            }
-        ],
-        "labels":"",
-        "reporter":"",
-        "bundles":"",
-        "recurse":true,
-        "directory":"tests.specs",
-        "testBundles":"",
-        "testSuites":"",
-        "testSpecs":"",
-        "verbose":true,
-        "watchDelay":500,
-        "watchPaths":"**.cfc"
+        "cfconcurrent":"cfconcurrent"
     },
     "dependencies":{
         "cfconcurrent":"^2.0.5"
