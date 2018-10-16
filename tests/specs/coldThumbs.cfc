@@ -70,6 +70,23 @@ component extends="tests.BaseTest" appMapping="/tests" {
 				).getURL()).toBe('cached/' & coldThumbs.generateCachedFilename(fileInfo, 400, 400));
 			});
 
+			it( "Can output a fixed canvas thumbnail from a local image", function(){
+				var fileInfo = coldThumbs.getImageFileInfo(src = expandPath('.') & '/resources/testImage.jpg');
+
+				var fixedCanvasThumb = coldThumbs.getThumbnail(
+					src						= 'resources/testImage.jpg',
+					outputType				= 'url',
+					width					= 1000,
+					height 					= 600,
+					backgroundColor 		= 'FF0000',
+					fixCanvas 				= true,
+					useThreading 			= false
+				);
+
+				expect(fixedCanvasThumb.getImageObject().width).toBe(1000);
+				expect(fixedCanvasThumb.getImageObject().height).toBe(600);
+			});
+
 			it( "Can output a thumbnail from a URL", function(){
 				var fileInfo = coldThumbs.getImageFileInfo(src = 'https://placebear.com/600/600.jpg');
 				expect(coldThumbs.getThumbnail(

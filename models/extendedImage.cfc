@@ -329,18 +329,16 @@ component accessors="true"{
 				}
 			}
 
-			else {
-				// We need to add 0.1 to the sizes to work around an occasional inaccuracy when resizing
-				imageResize(Local.theImage, Arguments.width > 0 ? Arguments.width + 0.1 : '', Arguments.height > 0 ? Arguments.height + 0.1 : '', Arguments.interpolation);
+			// We need to add 0.1 to the sizes to work around an occasional inaccuracy when resizing
+			imageResize(Local.theImage, Arguments.width > 0 ? Arguments.width + 0.1 : '', Arguments.height > 0 ? Arguments.height + 0.1 : '', Arguments.interpolation);
 
-				// If we have a fixed canvas, we need to paste the resized image onto the canvas we created earlier
-				if (Arguments.fixCanvas) {
-					imagePaste(Local.fixedCanvasImage, Local.theImage, (Local.fixedCanvasImage.width / 2) - (Local.theImage.width / 2), (Local.fixedCanvasImage.height / 2) - (Local.theImage.height / 2));
-					Local.theImage = Local.fixedCanvasImage;
-				}
-
-				setImageObject(Local.theImage);
+			// If we have a fixed canvas, we need to paste the resized image onto the canvas we created earlier
+			if (Arguments.fixCanvas) {
+				imagePaste(Local.fixedCanvasImage, Local.theImage, (Local.fixedCanvasImage.width / 2) - (Local.theImage.width / 2), (Local.fixedCanvasImage.height / 2) - (Local.theImage.height / 2));
+				Local.theImage = Local.fixedCanvasImage;
 			}
+
+			setImageObject(Local.theImage);
 		}
 
 		setTimer(getTickCount() - Local.tick);
