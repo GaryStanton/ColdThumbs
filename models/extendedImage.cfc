@@ -287,12 +287,27 @@ component accessors="true"{
 			return this;
 		}
 
+		// Get proportional sizing (Essentially if we're using a fixed canvas, we probably don't _want_ a proportional resize, but it's preferable to throwing an error if a dimension is not specified.)
+		if (Arguments.fixCanvas) {
+			Local.propSize = getProportionalSizes(
+				srcWidth 	= getImageObject().width,
+				srcHeight 	= getImageObject().height,
+				newWidth 	= Arguments.width,
+				newHeight 	= Arguments.height
+			);
+		}
+
 		// ImageMagick resize
 		if (len(getImageMagickLocation()) && fileExists(getImageMagickLocation())) {
 			// Create temporary filename
 			Local.tempFilename = GetTempDirectory() & createUUID() & '.' & listLast(getSrc(), '.');
 			// Resize the image in ImageMagick
-			cfexecute( name='"#getImageMagickLocation()#"', arguments="""#getSrc()#"" -resize #Arguments.width GT 0 ? Arguments.width : ''##Arguments.height GT 0 ? 'x' & Arguments.height : ''# ""#Local.tempFilename#""", variable="Results", errorVariable="Error", timeout="120");
+			if (Arguments.fixCanvas) {
+				cfexecute( name='"#getImageMagickLocation()#"', arguments="""#getSrc()#"" -resize #Arguments.width GT 0 ? Arguments.width : ''##Arguments.height GT 0 ? 'x' & Arguments.height : ''#\> -size #Arguments.width > 0 ? Arguments.width : Local.propSize.width#x#Arguments.height > 0 ? Arguments.height : Local.propSize.height# #StructKeyExists(Arguments, 'backgroundColor') ? 'xc:##' & Arguments.backgroundColor : ''# +swap -gravity center -composite ""#Local.tempFilename#""", variable="Results", errorVariable="Error", timeout="120");
+			}
+			else {
+				cfexecute( name='"#getImageMagickLocation()#"', arguments="""#getSrc()#"" -resize #Arguments.width GT 0 ? Arguments.width : ''##Arguments.height GT 0 ? 'x' & Arguments.height : ''# ""#Local.tempFilename#""", variable="Results", errorVariable="Error", timeout="120");
+			}
 			// Read the temporary image into the object
 			readImage(src = Local.tempFilename);
 			// Delete temporary image
@@ -311,14 +326,6 @@ component accessors="true"{
 
 			// If we need a fixed canvas, create a new image to work with
 			if (Arguments.fixCanvas) {
-				// Get proportional sizing (Essentially if we're using a fixed canvas, we probably don't _want_ a proportional resize, but it's preferable to throwing an error if a dimension is not specified.)
-				Local.propSize = getProportionalSizes(
-					srcWidth 	= Local.theImage.width,
-					srcHeight 	= Local.theImage.height,
-					newWidth 	= Arguments.width,
-					newHeight 	= Arguments.height
-				);
-
 				Local.fixedCanvasImage = ImageNew('', Arguments.width > 0 ? Arguments.width : Local.propSize.width, Arguments.height > 0 ? Arguments.height : Local.propSize.height, 'rgb', arguments.backgroundColor);
 				// Force a proportional resize by blanking out the smallest side
 				if(Local.theImage.width <= Local.theImage.height) {
