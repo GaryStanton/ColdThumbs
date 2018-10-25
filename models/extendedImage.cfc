@@ -303,7 +303,7 @@ component accessors="true"{
 			Local.tempFilename = GetTempDirectory() & createUUID() & '.' & listLast(getSrc(), '.');
 			// Resize the image in ImageMagick
 			if (Arguments.fixCanvas) {
-				cfexecute( name='"#getImageMagickLocation()#"', arguments="""#getSrc()#"" -resize #Arguments.width GT 0 ? Arguments.width : ''##Arguments.height GT 0 ? 'x' & Arguments.height : ''#\> -size #Arguments.width > 0 ? Arguments.width : Local.propSize.width#x#Arguments.height > 0 ? Arguments.height : Local.propSize.height# #StructKeyExists(Arguments, 'backgroundColor') ? 'xc:##' & Arguments.backgroundColor : ''# +swap -gravity center -composite ""#Local.tempFilename#""", variable="Results", errorVariable="Error", timeout="120");
+				cfexecute( name='"#getImageMagickLocation()#"', arguments="""#getSrc()#"" -resize #Arguments.width GT 0 ? Arguments.width : ''##Arguments.height GT 0 ? 'x' & Arguments.height : ''#\> -size #Arguments.width GT 0 ? Arguments.width : Local.propSize.width#x#Arguments.height GT 0 ? Arguments.height : Local.propSize.height# #StructKeyExists(Arguments, 'backgroundColor') ? 'xc:##' & Arguments.backgroundColor : ''# +swap -gravity center -composite ""#Local.tempFilename#""", variable="Results", errorVariable="Error", timeout="120");
 			}
 			else {
 				cfexecute( name='"#getImageMagickLocation()#"', arguments="""#getSrc()#"" -resize #Arguments.width GT 0 ? Arguments.width : ''##Arguments.height GT 0 ? 'x' & Arguments.height : ''# ""#Local.tempFilename#""", variable="Results", errorVariable="Error", timeout="120");
