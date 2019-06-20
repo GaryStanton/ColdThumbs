@@ -397,10 +397,12 @@ component singleton accessors="true"{
 			Arguments.theImage.setStatus('Resizing');
 
 			// Check to see if we already have a thread running for this image. We'll overwrite it if it's been running for longer than 300 seconds.
-			if (!(StructKeyExists(getRunningThreads(), Arguments.cachedFilename) && ((!StructKeyExists(getRunningThreads()[Arguments.cachedFilename], 'StartTime')) || dateDiff('s', getRunningThreads()[Arguments.cachedFilename].StartTime, Now()) <= 300))) {
+			if (!(StructKeyExists(getRunningThreads(), Arguments.cachedFilename) && StructKeyExists(getRunningThreads()[Arguments.cachedFilename], 'StartTime') && dateDiff('s', getRunningThreads()[Arguments.cachedFilename].StartTime, Now()) <= 300)) {
 
 				// Placeholder in runningThreads struct - will be overwritten from inside the thread
-				getRunningThreads()[Arguments.cachedFileName] = {};
+				getRunningThreads()[Arguments.cachedFileName] = {
+					StartTime = Now()
+				};
 
 				// Create a new thread in which to run resizing functions
 				thread 
