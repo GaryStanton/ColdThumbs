@@ -28,6 +28,12 @@ component singleton accessors="true"{
 	property type="numeric" name="maxHeight" default="5000";
 
 	/**
+	 * Default JPEG Quality
+	 * Value between 0 & 1
+	 */
+	property type="numeric" name="jpegQuality" default="0.8";
+
+	/**
 	 * Interpolation to use when resizing images
 	 */
 	property type="string" name="interpolation" default="mitchell";
@@ -163,7 +169,11 @@ component singleton accessors="true"{
 	* @filename 	(required) The filename to use when writing to the cache
 	* @return 		Cached image path
 	*/
-	string function writeImageToCache(required imageObject, required string filename){
+	string function writeImageToCache(
+			required imageObject
+		, 	required string filename
+		, 	numeric jpegQuality = getJpegQuality()
+	){
 
 		// Check cache folder exists
 		checkCacheFolder();
@@ -174,7 +184,7 @@ component singleton accessors="true"{
 
 		// Write to cache folder
 		try {
-			imageWrite(Local.theImage.getImageObject(), getCacheFolder() & '/' & Arguments.filename, 0.70, true);
+			imageWrite(Local.theImage.getImageObject(), getCacheFolder() & '/' & Arguments.filename, Arguments.jpegQuality, true);
 		}
 		catch (any e) {
 			return 'Error writing image to cache';
@@ -337,6 +347,7 @@ component singleton accessors="true"{
 		required numeric height, 
 				 boolean fixCanvas            = false,
 				 string  interpolation        = getInterpolation(),
+				 numeric jpegQuality 		  = getJpegQuality(),
 				 string  backgroundColor,         
 				 string  authenticationString = '' ){
 
@@ -354,7 +365,8 @@ component singleton accessors="true"{
 		// Write to cache
 		writeImageToCache(
 			imageObject 		= Arguments.theImage,
-			filename 			= Arguments.cachedFilename
+			filename 			= Arguments.cachedFilename,
+			jpegQuality 			= Arguments.jpegQuality
 		);
 	}
 
@@ -379,7 +391,8 @@ component singleton accessors="true"{
  				 numeric width 					= 0,
  				 numeric height 				= 0,
  				 boolean fixCanvas 				= false, 
- 				 string  interpolation          = getInterpolation(),                                                                                    
+ 				 string  interpolation          = getInterpolation(),  
+ 				 numeric jpegQuality 			= getJpegQuality(),
  				 string  backgroundColor
 		) {
 
@@ -489,6 +502,7 @@ component singleton accessors="true"{
 					string 	imageType 		= '',
 					boolean fixCanvas 		= false,
 					string  interpolation   = getInterpolation(),     
+					numeric jpegQuality 	= getJpegQuality(),
 					string 	backgroundColor,
 					boolean regenerate 		= false,
 					boolean useThreading 	= getUseThreading()
