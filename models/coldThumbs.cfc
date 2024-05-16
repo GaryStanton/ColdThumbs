@@ -114,6 +114,25 @@ component singleton accessors="true"{
 	}
 
 	/**
+	 * Set image magick location
+	 * Will also add WEBP to allowed mime types and extensions
+	 * @imageMagickLocation 	(required) The location of the ImageMagick binary
+	 */
+	function setImageMagickLocation(
+		required string imageMagickLocation
+	) {
+		if (fileExists(Arguments.imageMagickLocation)) {
+			Variables.imageMagickLocation = Arguments.imageMagickLocation;
+			setAllowedMimeTypes(getAllowedMimeTypes().append('image/webp'));
+			setAllowedExtensions(getAllowedExtensions().append('WEBP'));
+		}
+
+		return this;
+	}
+
+
+
+	/**
 	* getMemento
 	*/
 	function getMemento(){
@@ -179,12 +198,23 @@ component singleton accessors="true"{
 		checkCacheFolder();
 
 		// Create function local copy of the image to work from 
-		cfsilent(){writeDump(Arguments.imageObject)}; // Bug in Lucee will throw an error when duplicating a blank image without dumping first. LDEV-1906
+		if (Server.ColdFusion.productName != 'ColdFusion Server') {
+			cfsilent(){writeDump(Arguments.imageObject)}; // Bug in Lucee will throw an error when duplicating a blank image without dumping first. LDEV-1906
+		}
 		Local.theImage = duplicate(Arguments.imageObject);
 
 		// Write to cache folder
 		try {
-			imageWrite(Local.theImage.getImageObject(), getCacheFolder() & '/' & Arguments.filename, Arguments.jpegQuality, true);
+			// If we're trying to write a webp, well... ColdFusion still can't do that. In 2024. 
+			// Instead, we'll write a PNG and convert it to webp using ImageMagick.
+			if (ListLast(Arguments.filename, '.') == 'webp') {
+				imageWrite(Local.theImage.getImageObject(), getCacheFolder() & '/' & left(Arguments.filename, Len(Arguments.filename) - 5) & '.png', Arguments.jpegQuality, true);
+				cfexecute( name='"#getImageMagickLocation()#"', arguments="""#getCacheFolder() & '/' & left(Arguments.filename, Len(Arguments.filename) - 5) & '.png'#"" -define webp:emulate-jpeg-size=true -define webp:auto-filter=true ""#getCacheFolder() & '/' & Arguments.filename#""", variable="Results", errorVariable="Error", timeout="120");
+				fileDelete(getCacheFolder() & '/' & left(Arguments.filename, Len(Arguments.filename) - 5) & '.png');
+			}
+			else {
+				imageWrite(Local.theImage.getImageObject(), getCacheFolder() & '/' & Arguments.filename, Arguments.jpegQuality, true);
+			}
 		}
 		catch (any e) {
 			return 'Error writing image to cache';
@@ -323,7 +353,7 @@ component singleton accessors="true"{
 		Arguments.extension = (Len(Arguments.extension) ? Arguments.extension : Arguments.fileInfo.extension);
 		Arguments.extension = ArrayFindNoCase(getAllowedExtensions(), Arguments.extension) ? Arguments.extension : 'jpg';
 		Local.hash = Hash(Arguments.fileInfo.filename & Arguments.width & Arguments.height & Arguments.interpolation & Arguments.fileInfo.lastModified & Arguments.fixCanvas & '.' & Arguments.fileInfo.extension);
-		return (getKeepFilenames() ? Replace(REReplace(Arguments.fileInfo.filename, "[^0-9a-zA-Z -]", "", "ALL"), ' ', '-', 'ALL') & '_' & left(Local.hash, 6) : Local.hash) & '.' & Arguments.extension;
+		return (getKeepFilenames() ? Replace(REReplace(Arguments.fileInfo.filename, "[^0-9a-zA-Z- _]", "", "ALL"), ' ', '-', 'ALL') & '_' & left(Local.hash, 6) : Local.hash) & '.' & Arguments.extension;
 	}
 
 
@@ -366,7 +396,7 @@ component singleton accessors="true"{
 		writeImageToCache(
 			imageObject 		= Arguments.theImage,
 			filename 			= Arguments.cachedFilename,
-			jpegQuality 			= Arguments.jpegQuality
+			jpegQuality 		= Arguments.jpegQuality
 		);
 	}
 
@@ -480,6 +510,13 @@ component singleton accessors="true"{
 		}
 	}
 
+	/**
+	 * Check Image Magick is available
+	 */
+	function checkImageMagick() {
+		return len(getImageMagickLocation()) && fileExists(getImageMagickLocation());
+	}
+
 
 	/**
 	* Retrieve a thumbnail from the cache or generate a new one from source
@@ -487,7 +524,7 @@ component singleton accessors="true"{
 	* @authenticationString 	An authentication string if one is required (user:pass)
 	* @width 					Width of cached file
 	* @height 					Height of cached file
-	* @imageType 				Convert the resized image to a different type: (JPG|GIF|PNG|BMP) - Matches the source image type by default.
+	* @imageType 				Convert the resized image to a different type: (JPG|GIF|PNG|BMP|WEBP) - Matches the source image type by default.
 	* @fixCanvas 				When true, fix the canvas size to the specified dimensions, whilst proportionally resizing the content. e.g. You may want to create a uniform square image from a portrait or landscape image.
 	* @interpolation 			Interpolation to use for the resizing
 	* @backgroundColor			When using the fixCanvas method, the resulting image may contain a blank area that should be filled with a colour. (hex or r,g,b)
@@ -513,7 +550,7 @@ component singleton accessors="true"{
 		Local.theImage = new extendedImage();
 
 		// Check for imageMagick
-		if (len(getImageMagickLocation()) && fileExists(getImageMagickLocation())) {
+		if (checkImageMagick()) {
 			Local.theImage.setImageMagickLocation(getImageMagickLocation());
 		}
 
@@ -539,9 +576,9 @@ component singleton accessors="true"{
 				width 					= Arguments.width,
 				height 					= Arguments.height,
 				fixCanvas 				= Arguments.fixCanvas,
-				extension 				= structKeyExists(Arguments, 'imageType') && ListFindNoCase('jpg,jpeg,gif,png,bmp,tif,tiff', Arguments.imageType) ? Arguments.imageType : ''
+				extension 				= structKeyExists(Arguments, 'imageType') && ListFindNoCase('jpg,jpeg,gif,png,bmp,tif,tiff,webp', Arguments.imageType) ? Arguments.imageType : ''
 			);
-
+	
 			// Check cache
 			if (Arguments.regenerate || (!checkCachedImageExists(Local.cachedFilename))) {
 
@@ -549,6 +586,8 @@ component singleton accessors="true"{
 
 				// Check to see if we have an instance of the CFConcurrent executor service
 				if (Arguments.useThreading && (!isNull(getExecutorService())) && IsInstanceOf(getExecutorService(), 'cfconcurrent.ExecutorService')) {
+					Local.theImage.setStatus('Resizing');
+					
 					// Call task
 					var task 	= new generateThumbnailTask(
 						argumentCollection 	= Arguments,

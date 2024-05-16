@@ -10,6 +10,11 @@ component accessors="true"{
 	property name="imageObject";
 
 	/**
+	 * Image ID
+	 */
+	property name="id" type="numeric";
+
+	/**
 	 * The source of the image object
 	 */
 	property name="src" type="string";
@@ -80,6 +85,14 @@ component accessors="true"{
 	}
 
 	/**
+	 * Check Image Magick is available
+	 */
+	function checkImageMagick() {
+		return len(getImageMagickLocation()) && fileExists(getImageMagickLocation());
+	}
+
+
+	/**
 	 * Check that the image object contains an image
 	 * @return boolean
 	 */
@@ -121,16 +134,21 @@ component accessors="true"{
 	*/
 	private function getImageFromURL(required string url, string authenticationString = ''){
 		try {
+			Local.fileName = ListLast(Arguments.url, '/');
+
 			if (len(Arguments.authenticationString)) {
-				cfhttp(url="#Arguments.url#", result="Local.RemoteFile", method="GET") {
+				cfhttp(url="#Arguments.url#", result="Local.RemoteFile", method="GET", path="#GetTempDirectory()#", file="#Local.fileName#") {
 					cfhttpparam( type="header", name="Authorization", value="Basic #ToBase64(Arguments.authenticationString)#" );
 				}
 			}
 			else {
-				cfhttp(url="#Arguments.url#", result="Local.RemoteFile", method="GET");
+				cfhttp(url="#Arguments.url#", result="Local.RemoteFile", method="GET", path="#GetTempDirectory()#", file="#Local.fileName#");
 			}
-			setImageObject(imageRead(Local.RemoteFile.FileContent));
-			setStatus('Success');
+
+			getImageFromFileSystem(src = GetTempDirectory() & Local.fileName);
+
+			// Clean up
+			fileDelete(GetTempDirectory() & Local.fileName);
 		}
 
 		catch (any e) {
@@ -139,6 +157,9 @@ component accessors="true"{
 			);
 			setStatus('Error');
 			setStatusDetail(e.Message);
+
+			writedump(e);
+			abort;
 		}
 
 		return this;
@@ -152,8 +173,18 @@ component accessors="true"{
 	*/
 	private function getImageFromFileSystem(required string src){
 		try {
-			lock timeout="30" name="#Arguments.src#" type="readonly" { 
-				setImageObject(imageRead(Arguments.src));
+			lock timeout="30" name="#Arguments.src#" type="readonly" {
+				// If this is a webp image, ColdFusion can't handle it. However, we can use imageMagick to convert it to a png for processing.
+				if (fileGetMimeType(Arguments.src) == 'image/webp' && checkImageMagick()) {
+					Local.tempFilename = GetTempDirectory() & createUUID() & '.png';
+					cfexecute( name='"#getImageMagickLocation()#"', arguments="""#Arguments.src#"" ""#Local.tempFilename#""", variable="Results", errorVariable="Error", timeout="120");
+					setImageObject(imageRead(Local.tempFilename));
+					fileDelete(Local.tempFilename);
+				}
+				else {
+					// Read the image (File
+					setImageObject(imageRead(Arguments.src));
+				}
 			}
 			setStatus('Success');
 		}
@@ -179,7 +210,7 @@ component accessors="true"{
 	public function readImage(required string src, string authenticationString = '') {
 
 		Local.tick = getTickCount();
-		
+
 		// Check to see if we're pulling from a URL
 		if (Left(Arguments.src, 4) == 'http') {
 			getImageFromURL(
@@ -298,7 +329,7 @@ component accessors="true"{
 		}
 
 		// ImageMagick resize
-		if (len(getImageMagickLocation()) && fileExists(getImageMagickLocation())) {
+		if (checkImageMagick()) {
 			// Create temporary filename
 			Local.tempFilename = GetTempDirectory() & createUUID() & '.' & listLast(getSrc(), '.');
 			// Resize the image in ImageMagick
@@ -308,8 +339,14 @@ component accessors="true"{
 			else {
 				cfexecute( name='"#getImageMagickLocation()#"', arguments="""#getSrc()#"" -resize #Arguments.width GT 0 ? Arguments.width : ''##Arguments.height GT 0 ? 'x' & Arguments.height : ''# ""#Local.tempFilename#""", variable="Results", errorVariable="Error", timeout="120");
 			}
+
 			// Read the temporary image into the object
 			readImage(src = Local.tempFilename);
+
+			// Set dimensions
+			setWidth(getImageObject().width);
+			setHeight(getImageObject().height);
+
 			// Delete temporary image
 			try {
 				fileDelete(Local.tempFilename);
@@ -321,7 +358,9 @@ component accessors="true"{
 
 		else {
 			// Create function local copy of the image to work from
-			cfsilent(){writeDump(getImageObject())}; // Bug in Lucee will throw an error when duplicating a blank image without dumping first. This uses a large amount of memory! - LDEV-1906
+			if (Server.ColdFusion.productName != 'ColdFusion Server') {
+				cfsilent(){writeDump(getImageObject())}; // Bug in Lucee will throw an error when duplicating a blank image without dumping first. This uses a large amount of memory! - LDEV-1906
+			}
 			Local.theImage = duplicate(getImageObject());
 
 			// If we need a fixed canvas, create a new image to work with
@@ -373,6 +412,9 @@ component accessors="true"{
 			break;
 			case "tif,tiff":
 				setMimeType('image/tiff');
+			break;
+			case "webp":
+				setMimeType('image/webp');
 			break;
 		}
 
