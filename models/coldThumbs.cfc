@@ -113,6 +113,14 @@ component singleton accessors="true"{
 		return this;
 	}
 
+	function getRunningThreads(){
+		return Variables.runningThreads;
+	}
+
+	function getMaxThreads(){
+		return Variables.maxThreads;
+	}
+
 	/**
 	 * Set image magick location
 	 * Will also add WEBP to allowed mime types and extensions
@@ -273,9 +281,13 @@ component singleton accessors="true"{
 	/**
 	* Get a struct of file info from a local path
 	* @path 					(required) The path of the image
+	* @strictMimeType 			When false, the mime type will be detected using the file extension only
 	* @return 					File info struct
 	*/
-	private struct function getLocalFileInfo(required string path){
+	private struct function getLocalFileInfo(
+			required string path
+		,	boolean strictMimeType = false
+	){
 		if (fileExists(Arguments.path)) {
 			Local.path = normalisePath(Arguments.path);
 		}
@@ -292,11 +304,12 @@ component singleton accessors="true"{
 				extension 		= listLast(Arguments.path, '.'),
 				filename 		= ListDeleteAt(ListLast(Arguments.path, '/'), ListLen(ListLast(Arguments.path, '/'), '.'), '.'),
 				lastModified 	= createObject("java", "java.util.Date").init(Local.fileObj.lastModified()),
-				mimeType 		= FilegetMimeType(Local.path),
+				mimeType 		= FilegetMimeType(Local.path, Arguments.strictMimeType), // Strict mime type detection takes an extra 1-2ms
 				status 			= 200
 			};
 
 			Local.imageFileInfo.filename = ListDeleteAt(Local.imageFileInfo.name, ListLen(Local.imageFileInfo.name, '.'), '.');
+
 		}
 		else {
 			Local.imageFileInfo = {
@@ -428,7 +441,6 @@ component singleton accessors="true"{
 
 		// Queue threads
 		if (structCount(getRunningThreads()) >= getMaxThreads()) {
-
 			if (!(structKeyExists(getRunningThreads(), Arguments.cachedFileName)) && !(structKeyExists(getQueuedThreads(), Arguments.cachedFilename))) {
 				getQueuedThreads()[Arguments.cachedFileName] = duplicate(Arguments);
 				Arguments.theImage.setStatus('Queued');
@@ -586,6 +598,7 @@ component singleton accessors="true"{
 
 				// Check to see if we have an instance of the CFConcurrent executor service
 				if (Arguments.useThreading && (!isNull(getExecutorService())) && IsInstanceOf(getExecutorService(), 'cfconcurrent.ExecutorService')) {
+
 					Local.theImage.setStatus('Resizing');
 					
 					// Call task
@@ -596,6 +609,7 @@ component singleton accessors="true"{
 						fileInfo			= Local.fileInfo,
 						coldThumbs  		= this
 					);
+
 					getExecutorService().submit( task );
 				}
 

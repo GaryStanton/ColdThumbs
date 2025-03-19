@@ -30,7 +30,7 @@ The recommended method of installation is via CommandBox. Simply navigate to you
 install coldthumbs
 ```
 The full CommandBox installation includes a suite of TestBox tests, DocBox documentation and some examples.
-You may also manually download ColdThumbs from GitHub. The only files requried are in the model folder.
+You may also manually download ColdThumbs from GitHub. The only files required are in the model folder.
 
 ---
 
